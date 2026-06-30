@@ -53,7 +53,7 @@ export const Hero: React.FC = () => {
       <motion.div
         className="absolute inset-0 bg-cover bg-center mix-blend-overlay dark:mix-blend-normal opacity-[0.28] dark:opacity-[0.48] pointer-events-none"
         style={{
-          backgroundImage: "url('/farm_orchard_new.png')",
+         backgroundImage: "url('/farm_orchard_new.webp')",
           y: yBg,
         }}
       />
