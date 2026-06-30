@@ -1,0 +1,253 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KSR Coconuts - Big Things Are Coming</title>
+  <meta name="description" content="KSR Coconuts is launching soon. Premium Tender Coconuts. Freshness, Quality, Tradition." />
+  <style>
+    :root {
+      --gold:#FFD700;--gold-light:#FFE55C;--green:#2ED573;--green-dark:#1FAF5B;
+      --green-bright:#5CFF9D;--black:#000;--black-rich:#070A0D;
+      --glass-bg:rgba(6,15,10,.72);--glass-border:rgba(46,213,115,.18);
+      --font:'Arial Rounded MT Bold','Arial Rounded MT','Nunito','Century Gothic',Arial,sans-serif;
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html,body{width:100%;height:100%;overflow:hidden;background:var(--black-rich);font-family:var(--font)}
+    #pcanvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+    #ccanvas{position:fixed;inset:0;z-index:99;pointer-events:none;display:none}
+    #overlay{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;animation:fadeIn 1.2s cubic-bezier(.22,1,.36,1) .3s forwards}
+    @keyframes fadeIn{to{opacity:1}}
+    #overlay.out{animation:fadeOut 1s ease forwards}
+    @keyframes fadeOut{to{opacity:0;pointer-events:none}}
+    .card{position:relative;width:100%;max-width:760px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:32px;padding:52px 48px 44px;backdrop-filter:blur(28px) saturate(1.4);-webkit-backdrop-filter:blur(28px) saturate(1.4);box-shadow:0 0 60px rgba(46,213,115,.12),0 2px 0 rgba(255,255,255,.04) inset,0 60px 120px rgba(0,0,0,.85);text-align:center;transform:scale(.88) translateY(20px);animation:cardIn 1s cubic-bezier(.22,1,.36,1) .4s forwards;overflow:hidden}
+    @keyframes cardIn{to{transform:scale(1) translateY(0)}}
+    .corner{position:absolute;width:64px;height:64px;pointer-events:none}
+    .tl{top:0;left:0}.tr{top:0;right:0;transform:scaleX(-1)}.bl{bottom:0;left:0;transform:scaleY(-1)}.br{bottom:0;right:0;transform:scale(-1)}
+    .logo-wrap{position:relative;display:inline-block;margin-bottom:24px}
+    .glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(46,213,115,.35) 0%,transparent 70%);filter:blur(30px);animation:glowP 5s ease-in-out infinite;z-index:0}
+    @keyframes glowP{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.7}50%{transform:translate(-50%,-50%) scale(1.25);opacity:1}}
+    .logo{position:relative;z-index:1;width:110px;height:110px;border-radius:50%;object-fit:contain;background:#fff;padding:6px;border:2px solid rgba(46,213,115,.45);box-shadow:0 0 0 6px rgba(46,213,115,.1),0 12px 48px rgba(0,0,0,.6),0 0 40px rgba(46,213,115,.35);animation:logoF 5s ease-in-out infinite}
+    @keyframes logoF{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    .brand{font-size:clamp(1.5rem,4vw,2.4rem);font-weight:900;letter-spacing:.22em;color:var(--green);text-shadow:0 0 40px rgba(46,213,115,.5);text-transform:uppercase;margin-bottom:6px}
+    .headline{font-size:clamp(1.6rem,4.5vw,2.8rem);font-weight:900;color:#fff;line-height:1.15;letter-spacing:.04em;margin:14px 0 6px}
+    .gold{background:linear-gradient(90deg,#FFD700 0%,#FFE55C 40%,#FFD700 80%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shim 3s linear infinite}
+    @keyframes shim{to{background-position:200% center}}
+    .tagline{font-size:clamp(.72rem,2vw,.9rem);letter-spacing:.2em;color:rgba(255,255,255,.45);text-transform:uppercase;margin-bottom:26px}
+    .dot{color:var(--green);padding:0 6px}
+    .lbl{font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;color:rgba(255,255,255,.32);margin-bottom:5px}
+    .date{font-size:clamp(1rem,2.8vw,1.4rem);letter-spacing:.3em;color:var(--gold);font-weight:900;margin-bottom:30px;text-shadow:0 0 20px rgba(255,215,0,.4)}
+    .countdown{display:flex;justify-content:center;gap:clamp(8px,2vw,20px);margin-bottom:34px;flex-wrap:nowrap}
+    .box{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:clamp(60px,13vw,96px)}
+    .nwrap{position:relative;width:100%;height:clamp(60px,13vw,92px)}
+    .num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(7,20,14,.8);border:1px solid rgba(46,213,115,.25);border-radius:14px;font-size:clamp(1.5rem,4.5vw,2.6rem);font-weight:900;color:#fff;box-shadow:0 0 25px rgba(46,213,115,.4),0 4px 24px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.06);letter-spacing:.02em}
+    .num.flip{animation:flip .5s cubic-bezier(.4,0,.2,1)}
+    @keyframes flip{0%{transform:rotateX(0);opacity:1}45%{transform:rotateX(-90deg);opacity:0}55%{transform:rotateX(90deg);opacity:0}100%{transform:rotateX(0);opacity:1}}
+    .clbl{font-size:clamp(.52rem,1.4vw,.68rem);letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.38)}
+    .divider{width:100%;height:1px;background:linear-gradient(90deg,transparent 0%,rgba(46,213,115,.3) 30%,rgba(255,215,0,.3) 50%,rgba(46,213,115,.3) 70%,transparent 100%);margin-bottom:26px}
+    .btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+    .btn{position:relative;padding:13px 30px;border-radius:50px;font-family:var(--font);font-weight:900;font-size:clamp(.72rem,1.8vw,.88rem);letter-spacing:.14em;text-transform:uppercase;cursor:pointer;border:none;outline:none;transition:transform .25s,box-shadow .25s;overflow:hidden}
+    .btn::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);transform:skewX(-20deg);transition:left .6s ease}
+    .btn:hover::after{left:160%}
+    .btn-p{background:linear-gradient(135deg,var(--green-dark),var(--green));color:#000;box-shadow:0 0 20px rgba(46,213,115,.4),0 4px 16px rgba(0,0,0,.4)}
+    .btn-p:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 0 35px rgba(46,213,115,.65),0 8px 24px rgba(0,0,0,.4)}
+    .btn-s{background:transparent;color:var(--gold);border:1.5px solid rgba(255,215,0,.4);box-shadow:0 0 15px rgba(255,215,0,.1)}
+    .btn-s:hover{transform:translateY(-3px) scale(1.04);border-color:var(--gold);box-shadow:0 0 28px rgba(255,215,0,.35),0 8px 20px rgba(0,0,0,.4);background:rgba(255,215,0,.06)}
+    .skip{background:none;border:none;color:rgba(255,255,255,.22);font-family:var(--font);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:color .3s;padding:4px 0}
+    .skip:hover{color:rgba(255,255,255,.55)}
+    .foot{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,.05);font-size:.68rem;letter-spacing:.17em;color:rgba(255,255,255,.18);text-transform:uppercase}
+    .foot span{color:var(--green)}
+    #nmodal{display:none;position:fixed;inset:0;z-index:200;align-items:center;justify-content:center;background:rgba(0,0,0,.7);backdrop-filter:blur(6px)}
+    #nmodal.open{display:flex}
+    .ncard{background:rgba(6,16,10,.96);border:1px solid rgba(46,213,115,.3);border-radius:24px;padding:36px 32px;max-width:400px;width:90%;text-align:center;box-shadow:0 0 60px rgba(46,213,115,.2),0 40px 80px rgba(0,0,0,.7);animation:cardIn .5s ease-out}
+    .ncard h3{color:var(--green);font-size:1.2rem;letter-spacing:.1em;margin-bottom:8px}
+    .ncard p{color:rgba(255,255,255,.48);font-size:.78rem;margin-bottom:18px}
+    .ninput{width:100%;padding:11px 15px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(46,213,115,.25);color:#fff;font-family:var(--font);font-size:.82rem;outline:none;margin-bottom:11px;transition:border-color .2s}
+    .ninput:focus{border-color:var(--green)}
+    .nsub{width:100%;padding:12px;border-radius:50px;background:linear-gradient(135deg,var(--green-dark),var(--green));border:none;color:#000;font-family:var(--font);font-weight:900;letter-spacing:.1em;font-size:.82rem;cursor:pointer;transition:transform .2s,box-shadow .2s}
+    .nsub:hover{transform:scale(1.03);box-shadow:0 0 25px rgba(46,213,115,.5)}
+    .nclose{margin-top:10px;background:none;border:none;color:rgba(255,255,255,.28);font-family:var(--font);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+    .nclose:hover{color:rgba(255,255,255,.55)}
+    @media(max-width:480px){.card{padding:34px 18px 30px;border-radius:22px}.logo{width:80px;height:80px}.countdown{gap:7px}.btns{flex-direction:column;align-items:center}.btn{width:100%;max-width:260px}}
+  </style>
+</head>
+<body>
+<canvas id="pcanvas"></canvas>
+<canvas id="ccanvas"></canvas>
+
+<div id="overlay">
+<div class="card">
+  <!-- SVG Corners -->
+  <svg class="corner tl" viewBox="0 0 64 64" fill="none"><path d="M2 32L2 2L32 2" stroke="#2ED573" stroke-width="1.5" stroke-linecap="round"/><path d="M2 18L2 2L18 2" stroke="#FFD700" stroke-width=".7" stroke-linecap="round" opacity=".6"/><circle cx="2" cy="2" r="3" fill="#2ED573" opacity=".8"/><circle cx="2" cy="2" r="1.5" fill="#FFD700"/></svg>
+  <svg class="corner tr" viewBox="0 0 64 64" fill="none"><path d="M2 32L2 2L32 2" stroke="#2ED573" stroke-width="1.5" stroke-linecap="round"/><path d="M2 18L2 2L18 2" stroke="#FFD700" stroke-width=".7" stroke-linecap="round" opacity=".6"/><circle cx="2" cy="2" r="3" fill="#2ED573" opacity=".8"/><circle cx="2" cy="2" r="1.5" fill="#FFD700"/></svg>
+  <svg class="corner bl" viewBox="0 0 64 64" fill="none"><path d="M2 32L2 2L32 2" stroke="#2ED573" stroke-width="1.5" stroke-linecap="round"/><path d="M2 18L2 2L18 2" stroke="#FFD700" stroke-width=".7" stroke-linecap="round" opacity=".6"/><circle cx="2" cy="2" r="3" fill="#2ED573" opacity=".8"/><circle cx="2" cy="2" r="1.5" fill="#FFD700"/></svg>
+  <svg class="corner br" viewBox="0 0 64 64" fill="none"><path d="M2 32L2 2L32 2" stroke="#2ED573" stroke-width="1.5" stroke-linecap="round"/><path d="M2 18L2 2L18 2" stroke="#FFD700" stroke-width=".7" stroke-linecap="round" opacity=".6"/><circle cx="2" cy="2" r="3" fill="#2ED573" opacity=".8"/><circle cx="2" cy="2" r="1.5" fill="#FFD700"/></svg>
+
+  <!-- Logo -->
+  <div class="logo-wrap">
+    <div class="glow"></div>
+    <img class="logo" src="/logo.jpg" alt="KSR Coconuts" onerror="this.style.display='none'"/>
+  </div>
+
+  <div class="brand">KSR COCONUTS&#8482;</div>
+  <div class="headline"><span class="gold">BIG THINGS</span><br/>ARE COMING.</div>
+  <p class="tagline">Premium Tender Coconuts<br/>Freshness<span class="dot">&bull;</span>Quality<span class="dot">&bull;</span>Tradition</p>
+
+  <div class="lbl">Official Launch Date</div>
+  <div class="date">01 &bull; 07 &bull; 2026</div>
+
+  <div class="countdown">
+    <div class="box"><div class="nwrap"><div class="num" id="d">00</div></div><div class="clbl">Days</div></div>
+    <div class="box"><div class="nwrap"><div class="num" id="h">00</div></div><div class="clbl">Hours</div></div>
+    <div class="box"><div class="nwrap"><div class="num" id="m">00</div></div><div class="clbl">Minutes</div></div>
+    <div class="box"><div class="nwrap"><div class="num" id="s">00</div></div><div class="clbl">Seconds</div></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="btns">
+    <button class="btn btn-p" onclick="enter()">&#9889; Enter Website</button>
+    <button class="btn btn-s" onclick="openN()">&#128276; Notify Me</button>
+  </div>
+  <button class="skip" onclick="enter()">Skip Intro</button>
+
+  <div class="foot"><span>KSR Coconuts&#8482;</span> &nbsp;&mdash;&nbsp; Freshness Beyond Expectations&#8482;</div>
+</div>
+</div>
+
+<div id="nmodal">
+<div class="ncard">
+  <h3>&#128276; Get Notified</h3>
+  <p>Enter your email and we'll alert you the moment we launch.</p>
+  <input type="email" class="ninput" id="nemail" placeholder="your@email.com"/>
+  <button class="nsub" onclick="subN()">Notify Me at Launch</button><br/>
+  <button class="nclose" onclick="closeN()">No thanks</button>
+</div>
+</div>
+
+<script>
+// Target: 2026-07-01 10:00:00 IST (UTC+5:30)
+const TARGET = new Date('2026-07-01T10:00:00+05:30');
+const els = { d: document.getElementById('d'), h: document.getElementById('h'), m: document.getElementById('m'), s: document.getElementById('s') };
+const prev = {};
+
+function pad(n) { return String(Math.max(0,n)).padStart(2,'0'); }
+
+function flip(el, v, k) {
+  const pv = pad(v);
+  if (prev[k] !== pv) {
+    el.textContent = pv;
+    el.classList.remove('flip');
+    void el.offsetWidth;
+    el.classList.add('flip');
+    prev[k] = pv;
+  }
+}
+
+function tick() {
+  const diff = TARGET - new Date();
+  if (diff <= 0) {
+    ['d','h','m','s'].forEach(k => flip(els[k], 0, k));
+    clearInterval(tid);
+    confetti();
+    setTimeout(() => { const o = document.getElementById('overlay'); o.classList.add('out'); setTimeout(() => o.remove(), 1100); }, 3000);
+    return;
+  }
+  flip(els.d, Math.floor(diff/86400000), 'd');
+  flip(els.h, Math.floor((diff%86400000)/3600000), 'h');
+  flip(els.m, Math.floor((diff%3600000)/60000), 'm');
+  flip(els.s, Math.floor((diff%60000)/1000), 's');
+}
+
+tick();
+const tid = setInterval(tick, 1000);
+
+function enter() {
+  localStorage.setItem('ksr_v','1');
+  const o = document.getElementById('overlay');
+  o.classList.add('out');
+  setTimeout(() => o.remove(), 1000);
+}
+
+function openN() { document.getElementById('nmodal').classList.add('open'); }
+function closeN() { document.getElementById('nmodal').classList.remove('open'); }
+function subN() {
+  const e = document.getElementById('nemail');
+  if (!e.value || !e.value.includes('@')) { e.style.borderColor='rgba(255,80,80,.6)'; return; }
+  closeN();
+  alert("You're on the list! We'll notify you at launch.");
+}
+
+// Particle canvas
+(function(){
+  const c = document.getElementById('pcanvas');
+  const x = c.getContext('2d');
+  let W, H, mx = -999, my = -999;
+  const COLS = ['#1FAF5B','#2ED573','#5CFF9D','#FFD700'];
+  const N = window.innerWidth < 600 ? 42 : 88;
+  const LD = 130, MD = 160;
+  function resize(){ W = c.width = innerWidth; H = c.height = innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  window.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+  window.addEventListener('touchmove', e => { mx=e.touches[0].clientX; my=e.touches[0].clientY; }, {passive:true});
+  class P {
+    constructor(){ this.reset(); }
+    reset(){
+      this.x = Math.random()*W; this.y = Math.random()*H;
+      this.vx = (Math.random()-.5)*.45; this.vy = (Math.random()-.5)*.45;
+      this.r = Math.random()*2.2+.8; this.color = COLS[Math.random()*COLS.length|0];
+      this.a = Math.random()*.5+.25; this.gs = Math.random()*8+3;
+      this.ph = Math.random()*Math.PI*2; this.sp = Math.random()*.008+.003;
+    }
+    update(){
+      this.ph += this.sp;
+      this.x += this.vx + Math.sin(this.ph)*.2;
+      this.y += this.vy + Math.cos(this.ph*.7)*.2;
+      const dx = this.x-mx, dy = this.y-my, d = Math.sqrt(dx*dx+dy*dy);
+      if(d < MD){ const f=(MD-d)/MD; this.x+=(dx/d)*f*1.8; this.y+=(dy/d)*f*1.8; }
+      if(this.x<-10) this.x=W+10; if(this.x>W+10) this.x=-10;
+      if(this.y<-10) this.y=H+10; if(this.y>H+10) this.y=-10;
+    }
+    draw(){
+      x.save(); x.globalAlpha=this.a; x.shadowColor=this.color; x.shadowBlur=this.gs;
+      x.beginPath(); x.arc(this.x,this.y,this.r,0,Math.PI*2); x.fillStyle=this.color; x.fill(); x.restore();
+    }
+  }
+  const ps = Array.from({length:N},()=>new P());
+  function links(){
+    for(let i=0;i<ps.length;i++) for(let j=i+1;j<ps.length;j++){
+      const a=ps[i],b=ps[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<LD){ x.beginPath(); x.strokeStyle=`rgba(46,213,115,${(1-d/LD)*.2})`; x.lineWidth=.7; x.moveTo(a.x,a.y); x.lineTo(b.x,b.y); x.stroke(); }
+    }
+  }
+  function loop(){ x.clearRect(0,0,W,H); links(); ps.forEach(p=>{p.update();p.draw();}); requestAnimationFrame(loop); }
+  loop();
+})();
+
+// Confetti
+function confetti(){
+  const c = document.getElementById('ccanvas');
+  c.style.display='block'; const x=c.getContext('2d');
+  c.width=innerWidth; c.height=innerHeight;
+  const COLS=['#2ED573','#FFD700','#5CFF9D','#FF6B35','#FF3CAC','#fff'];
+  const ps=Array.from({length:180},()=>({
+    x:Math.random()*c.width, y:Math.random()*c.height-c.height,
+    w:Math.random()*10+4, h:Math.random()*6+3,
+    vx:(Math.random()-.5)*3, vy:Math.random()*3+1.5,
+    ang:Math.random()*Math.PI*2, va:(Math.random()-.5)*.15,
+    col:COLS[Math.random()*COLS.length|0], a:1
+  }));
+  let fr=0;
+  function loop(){
+    x.clearRect(0,0,c.width,c.height);
+    ps.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.ang+=p.va; if(fr>90) p.a-=.008;
+      x.save(); x.globalAlpha=Math.max(0,p.a); x.translate(p.x,p.y); x.rotate(p.ang);
+      x.fillStyle=p.col; x.fillRect(-p.w/2,-p.h/2,p.w,p.h); x.restore(); });
+    fr++;
+    if(fr<200) requestAnimationFrame(loop); else c.style.display='none';
+  }
+  loop();
+}
+</script>
+</body>
+</html>
