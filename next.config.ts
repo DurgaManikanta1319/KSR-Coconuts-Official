@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  serverExternalPackages: ["lightningcss", "@tailwindcss/postcss"],
 };
 
 export default nextConfig;
